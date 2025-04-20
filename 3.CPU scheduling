@@ -1,0 +1,131 @@
+import java.util.Scanner;
+class Main {
+public static void FIFO() {
+    Scanner s = new Scanner(System.in);
+    int[] algo = new int[10]; // Input sequence of pages
+
+    System.out.println("FIFO - First In First Out");
+    System.out.println("Enter 10 pages for page replacement algorithm:");
+    System.out.println();
+
+    // Taking input
+    for (int i = 0; i < 10; i++) {
+        algo[i] = s.nextInt();
+    }
+
+    int[] frames = new int[3]; // Array to hold 3 page frames
+    int frame = 0;             // Pointer to replace pages in FIFO order
+    int hit = 0;               // Count of page hits
+    boolean contains = false; // Flag to check if page is already in a frame
+
+    System.out.println("\nPage Replacement Steps:");
+    System.out.println("------------------------");
+
+    // Loop through each page request
+    for (int i = 0; i < 10; i++) {
+        contains = false;
+
+        // Check if the page is already present in frames
+        for (int j = 0; j < 3; j++) {
+            if (frames[j] == algo[i]) {
+                contains = true; // Page hit
+                break;
+            }
+        }
+
+        // If page not found → replace using FIFO
+        if (!contains) {
+            frames[frame] = algo[i];          // Replace oldest page
+            frame = (frame + 1) % 3;          // Move to next frame slot
+        } else {
+            hit++; // Count page hit
+        }
+
+        // Print current state
+        System.out.print("Page " + algo[i] + ":  ");
+        for (int k = 0; k < 3; k++) {
+            System.out.print(frames[k] + " ");
+        }
+        System.out.println(contains ? "Hit" : "Fault");
+    }
+
+    System.out.println("\n------------------------");
+    System.out.println("Number of page hits   = " + hit);
+    System.out.println("Number of page faults = " + (10 - hit));
+}
+
+    
+public static void LRU() {
+    Scanner s = new Scanner(System.in);
+    int[] algo = new int[10];
+    int time = 0;
+    int minIndex = 0; // Initialize here
+    System.out.println("LRU");
+    System.out.println("Enter pages for page replacement algorithm:");
+    System.out.println("");
+
+    for (int i = 0; i < 10; i++) {
+        algo[i] = s.nextInt();
+    }
+
+    int[] frames = new int[3];
+    int[] frameUsed = new int[3];
+    for (int i = 0; i < 3; i++) {
+        frames[i] = -1;
+        frameUsed[i] = -1;
+    }
+
+    int hit = 0;
+    boolean contains = false;
+
+    for (int i = 0; i < 10; i++) {
+        contains = false;
+
+        // Check for hit
+        for (int j = 0; j < 3; j++) {
+            if (frames[j] == algo[i]) {
+                contains = true;
+                frameUsed[j] = time; // Update usage time
+                hit++;
+                break;
+            }
+        }
+
+        // If not hit → replace LRU
+        if (!contains) {
+            // Find least recently used
+            int minTime = frameUsed[0];
+            minIndex = 0;
+            for (int j = 1; j < 3; j++) {
+                if (frameUsed[j] < minTime) {
+                    minTime = frameUsed[j];
+                    minIndex = j;
+                }
+            }
+
+            frames[minIndex] = algo[i];
+            frameUsed[minIndex] = time;
+        }
+
+        // Print status
+        System.out.print(algo[i] + ": ");
+        for (int k = 0; k < 3; k++) {
+            if (frames[k] != -1)
+                System.out.print(frames[k] + " ");
+            else
+                System.out.print("- ");
+        }
+        System.out.println(contains ? "Hit" : "Fault");
+
+        time++; // Update logical time
+    }
+
+    System.out.println("Number of page hits= " + hit);
+    System.out.println("Number of page faults= " + (10 - hit));
+}
+
+    public static void main(String[] args) {
+        FIFO();
+        LRU();
+    }
+}
