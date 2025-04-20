@@ -1,0 +1,26 @@
+#!/bin/bash
+echo "(a)"
+lsb_release -a
+uname -v
+uname -r
+
+echo ""
+echo "(b)"
+ps -eo pid,ppid,cmd,%mem,%cpu --sort=%cpu | head -n 5
+
+echo ""
+echo "(c)"
+ps -eo pid,ppid,cmd,%mem,%cpu --sort=%mem | head -n 5
+
+echo ""
+echo "(d)"
+echo "$(logname)"
+echo "$(whoami)"
+
+echo ""
+echo "(e)"
+echo "$SHELL"
+echo "$HOME"
+echo "$(uname)"
+echo "$PATH"
+echo "$(pwd)"
