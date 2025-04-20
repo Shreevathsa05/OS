@@ -1,0 +1,92 @@
+import java.util.Scanner;
+
+public class BankersAlgorithm {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Number of processes and resources
+        int n, m;
+        System.out.print("Enter number of processes: ");
+        n = sc.nextInt();
+
+        System.out.print("Enter number of resource types: ");
+        m = sc.nextInt();
+
+        int[][] max = new int[n][m];
+        int[][] allocation = new int[n][m];
+        int[][] need = new int[n][m];
+        int[] available = new int[m];
+
+        // Input MAX matrix
+        System.out.println("Enter the MAX matrix:");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                max[i][j] = sc.nextInt();
+            }
+        }
+
+        // Input ALLOCATION matrix
+        System.out.println("Enter the ALLOCATION matrix:");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                allocation[i][j] = sc.nextInt();
+            }
+        }
+
+        // Input AVAILABLE resources
+        System.out.println("Enter the AVAILABLE resources:");
+        for (int j = 0; j < m; j++) {
+            available[j] = sc.nextInt();
+        }
+
+        // Calculate NEED matrix = MAX - ALLOCATION
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                need[i][j] = max[i][j] - allocation[i][j];
+            }
+        }
+
+        // Apply Safety Algorithm
+        boolean[] finish = new boolean[n];
+        int[] work = new int[m];
+        System.arraycopy(available, 0, work, 0, m);
+
+        String safeSequence = "";
+        int count = 0;
+
+        while (count < n) {
+            boolean found = false;
+
+            for (int i = 0; i < n; i++) {
+                if (!finish[i]) {
+                    int j;
+                    for (j = 0; j < m; j++) {
+                        if (need[i][j] > work[j]) break;
+                    }
+
+                    if (j == m) {
+                        // This process can safely execute
+                        for (int k = 0; k < m; k++) {
+                            work[k] += allocation[i][k];
+                        }
+
+                        safeSequence += "P" + i + " ";
+                        finish[i] = true;
+                        found = true;
+                        count++;
+                    }
+                }
+            }
+
+            if (!found) break; // No suitable process found → UNSAFE
+        }
+
+        // Final Result
+        if (count == n) {
+            System.out.println("\nSystem is in a SAFE STATE");
+            System.out.println("Safe sequence: " + safeSequence);
+        } else {
+            System.out.println("\nSystem is in an UNSAFE STATE (deadlock may occur)");
+        }
+    }
+}
