@@ -1,0 +1,95 @@
+public class SCAN {
+    public static void main(String[] args) {
+        int[] requests = {98, 183, 37, 122, 14, 124, 65, 67};  // Disk requests
+        int head = 53;   // Initial head position
+        int diskSize = 199;  // Assume disk size (0–199)
+        int totalSeek = 0;
+
+        // Sort the request array
+        for (int i = 0; i < requests.length - 1; i++) {
+            for (int j = i + 1; j < requests.length; j++) {
+                if (requests[i] > requests[j]) {
+                    int temp = requests[i];
+                    requests[i] = requests[j];
+                    requests[j] = temp;
+                }
+            }
+        }
+
+        // Find the split index
+        int i;
+        for (i = 0; i < requests.length; i++) {
+            if (requests[i] >= head)
+                break;
+        }
+
+        // Move right (to end), then left
+        System.out.println("SCAN Order:");
+        for (int j = i; j < requests.length; j++) {
+            System.out.print(requests[j] + " ");
+            totalSeek += Math.abs(requests[j] - head);
+            head = requests[j];
+        }
+
+        // Go to end
+        totalSeek += Math.abs((diskSize - 1) - head);
+        head = diskSize - 1;
+
+        // Move left
+        for (int j = i - 1; j >= 0; j--) {
+            System.out.print(requests[j] + " ");
+            totalSeek += Math.abs(requests[j] - head);
+            head = requests[j];
+        }
+
+        System.out.println("\nTotal seek time: " + totalSeek);
+    }
+}
+
+
+
+
+//................................................................................................
+
+public class LOOK {
+    public static void main(String[] args) {
+        int[] requests = {98, 183, 37, 122, 14, 124, 65, 67};
+        int head = 53;
+        int totalSeek = 0;
+
+        // Sort the request array
+        for (int i = 0; i < requests.length - 1; i++) {
+            for (int j = i + 1; j < requests.length; j++) {
+                if (requests[i] > requests[j]) {
+                    int temp = requests[i];
+                    requests[i] = requests[j];
+                    requests[j] = temp;
+                }
+            }
+        }
+
+        // Find the split index
+        int i;
+        for (i = 0; i < requests.length; i++) {
+            if (requests[i] >= head)
+                break;
+        }
+
+        // Move right
+        System.out.println("LOOK Order:");
+        for (int j = i; j < requests.length; j++) {
+            System.out.print(requests[j] + " ");
+            totalSeek += Math.abs(requests[j] - head);
+            head = requests[j];
+        }
+
+        // Move left
+        for (int j = i - 1; j >= 0; j--) {
+            System.out.print(requests[j] + " ");
+            totalSeek += Math.abs(requests[j] - head);
+            head = requests[j];
+        }
+
+        System.out.println("\nTotal seek time: " + totalSeek);
+    }
+}
